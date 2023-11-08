@@ -1,0 +1,10 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml"
+    ]
+}
