@@ -8,13 +8,13 @@ use utils::random_utils::flip_coin;
 use utils::utils::time_execution;
 
 mod cli;
-use cli::input::prompt_for_flips;
+use cli::input::{prompt_for_flips, prompt_for_options};
 use cli::output::{display_results, display_stats};
 
 fn main() {
+    prompt_for_options();
     loop {
         let times = prompt_for_flips();
-
         let ((results, heads, tails), duration) = time_execution(|| flip_coin(times));
 
         display_results(&results);
