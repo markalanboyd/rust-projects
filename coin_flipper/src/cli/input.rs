@@ -20,6 +20,8 @@ pub fn prompt_for_flips() -> i32 {
                 continue;
             }
         };
+
+        println!("\nFlipping coin {times} times...\n");
         return times;
     }
 }

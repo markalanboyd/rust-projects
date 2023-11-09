@@ -1,58 +1,25 @@
-use num_format::{Locale, ToFormattedString};
-
-use std::time::Instant;
+// TODO Add a method that looks through the string you create and looks for the longest streak
+// TODO Store the streak in a high score file - make it so that it adds your 3 initials
+// TODO Add config options for how the data is returned - try converting it to interesting types
 
 mod utils;
 use utils::file_utils::string_to_file;
 use utils::random_utils::flip_coin;
-use utils::utils::round_to;
+use utils::utils::time_execution;
 
 mod cli;
 use cli::input::prompt_for_flips;
-use cli::output::display_results;
+use cli::output::{display_results, display_stats};
 
 fn main() {
     loop {
         let times = prompt_for_flips();
 
-        println!("\nFlipping coin {times} times...\n");
-
-        let start = Instant::now();
-        let (results, heads, tails) = flip_coin(times);
-        let duration = start.elapsed();
+        let ((results, heads, tails), duration) = time_execution(|| flip_coin(times));
 
         display_results(&results);
+        display_stats(times, heads, tails, duration);
 
         string_to_file(&results, "results.txt");
-
-        // TODO Break into function
-        let heads_fmt: String = heads.to_formatted_string(&Locale::en);
-        let tails_fmt: String = tails.to_formatted_string(&Locale::en);
-        let percent_heads: f64 = (heads as f64 / times as f64) * 100.0;
-        let percent_tails: f64 = 100.0 - percent_heads;
-        let percent_heads_rounded: f64 = round_to(percent_heads, 5);
-        let percent_tails_rounded: f64 = round_to(percent_tails, 5);
-
-        let total_difference: i32 = (heads as i32 - tails as i32).abs();
-        let percent_difference: f64 = (percent_heads - percent_tails).abs();
-        let percent_difference_rounded: f64 = round_to(percent_difference, 5);
-        let total_diff_fmt: String = total_difference.to_formatted_string(&Locale::en);
-
-        print!("\n\n");
-        println!("::Stats::");
-        println!("Number");
-        println!("Heads: {}", heads_fmt);
-        println!("Tails: {}", tails_fmt);
-        println!("Difference: {}", total_diff_fmt);
-        println!();
-        println!("Percent");
-        println!("Heads: {}%", percent_heads_rounded);
-        println!("Tails: {}%", percent_tails_rounded);
-        println!("Difference: {}%", percent_difference_rounded);
-        println!();
-
-        println!("Execution time: {:?}", duration);
-
-        println!("\n");
     }
 }
