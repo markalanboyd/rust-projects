@@ -2,24 +2,30 @@
 // TODO Store the streak in a high score file - make it so that it adds your 3 initials
 // TODO Add config options for how the data is returned - try converting it to interesting types
 
-mod utils;
-use utils::file_utils::string_to_file;
-use utils::random_utils::flip_coin;
-use utils::utils::time_execution;
-
 mod cli;
-use cli::input::{prompt_for_flips, prompt_for_options};
-use cli::output::{display_results, display_stats};
+mod coin_flip;
+mod stats;
+mod utils;
+
+use cli::prompt_for_flips;
+use coin_flip::CoinFlipSession;
+use stats::{display_results, display_stats};
+use utils::string_to_file;
 
 fn main() {
-    prompt_for_options();
     loop {
-        let times = prompt_for_flips();
-        let ((results, heads, tails), duration) = time_execution(|| flip_coin(times));
+        let times: i32 = prompt_for_flips();
+        let mut flip_results = CoinFlipSession::new();
+        flip_results.flip_coins(times);
 
-        display_results(&results);
-        display_stats(times, heads, tails, duration);
+        display_results(&flip_results.flip_sequence);
+        display_stats(
+            times,
+            flip_results.heads,
+            flip_results.tails,
+            flip_results.duration,
+        );
 
-        string_to_file(&results, "results.txt");
+        string_to_file(&flip_results.flip_sequence, "results.txt");
     }
 }

@@ -5,6 +5,10 @@
         "./coin_flipper/Cargo.toml",
         "./coin_flipper/Cargo.toml",
         "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml",
+        "./coin_flipper/Cargo.toml",
         "./coin_flipper/Cargo.toml"
-    ]
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
 }
