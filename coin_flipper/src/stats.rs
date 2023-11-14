@@ -70,3 +70,19 @@ pub fn display_stats(times: i32, heads: i32, tails: i32, duration: std::time::Du
 
     println!("\n");
 }
+
+pub fn most_in_a_row(string: &String, target: char) -> i32 {
+    let mut count: i32 = 0;
+    let mut high_count: i32 = 0;
+    for ch in string.chars() {
+        if ch == target {
+            count += 1;
+        } else {
+            if count > high_count {
+                high_count = count;
+            }
+            count = 0;
+        }
+    }
+    return high_count;
+}

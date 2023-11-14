@@ -9,7 +9,7 @@ mod utils;
 
 use cli::prompt_for_flips;
 use coin_flip::CoinFlipSession;
-use stats::{display_results, display_stats};
+use stats::{display_results, display_stats, most_in_a_row};
 use utils::string_to_file;
 
 fn main() {
@@ -25,6 +25,9 @@ fn main() {
             flip_results.tails,
             flip_results.duration,
         );
+
+        let streak: i32 = most_in_a_row(&flip_results.flip_sequence, 'H');
+        println!("Most heads in a row: {}", streak);
 
         string_to_file(&flip_results.flip_sequence, "results.txt");
     }
