@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::utils::round_to;
 use num_format::{Locale, ToFormattedString};
 
@@ -71,18 +73,50 @@ pub fn display_stats(times: i32, heads: i32, tails: i32, duration: std::time::Du
     println!("\n");
 }
 
-pub fn most_in_a_row(string: &String, target: char) -> i32 {
-    let mut count: i32 = 0;
-    let mut high_count: i32 = 0;
-    for ch in string.chars() {
-        if ch == target {
-            count += 1;
-        } else {
-            if count > high_count {
-                high_count = count;
+pub fn get_most_chars_in_a_row(string: &str) -> HashMap<char, i32> {
+    let mut count: i32 = 1;
+    let mut char_streaks: HashMap<char, i32> = HashMap::new();
+    let mut prev_char: Option<char> = None;
+
+    for current_char in string.chars() {
+        if let Some(ch) = prev_char {
+            if ch == current_char {
+                count += 1;
+            } else {
+                update_streaks(&mut char_streaks, ch, count);
+                count = 1;
             }
-            count = 0;
         }
+        prev_char = Some(current_char);
     }
-    return high_count;
+
+    if let Some(ch) = prev_char {
+        update_streaks(&mut char_streaks, ch, count);
+    }
+
+    char_streaks
+}
+
+fn update_streaks(char_streaks: &mut HashMap<char, i32>, ch: char, count: i32) {
+    let high_count = char_streaks.entry(ch).or_insert(0);
+    *high_count = (*high_count).max(count);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_most_in_a_row() {
+        let test_string = "aabbaaccdddbbaaa".to_string();
+        let mut expected = HashMap::new();
+        expected.insert('a', 3);
+        expected.insert('b', 2);
+        expected.insert('c', 2);
+        expected.insert('d', 3);
+
+        let result = get_most_chars_in_a_row(&test_string);
+
+        assert_eq!(result, expected);
+    }
 }

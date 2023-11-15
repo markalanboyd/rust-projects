@@ -7,9 +7,11 @@ mod coin_flip;
 mod stats;
 mod utils;
 
+use std::collections::HashMap;
+
 use cli::prompt_for_flips;
 use coin_flip::CoinFlipSession;
-use stats::{display_results, display_stats, most_in_a_row};
+use stats::{display_results, display_stats, get_most_chars_in_a_row};
 use utils::string_to_file;
 
 fn main() {
@@ -26,8 +28,11 @@ fn main() {
             flip_results.duration,
         );
 
-        let streak: i32 = most_in_a_row(&flip_results.flip_sequence, 'H');
-        println!("Most heads in a row: {}", streak);
+        let char_streaks: HashMap<char, i32> = get_most_chars_in_a_row(&flip_results.flip_sequence);
+        let heads_streak: &i32 = char_streaks.get(&'H').unwrap_or(&0);
+        let tails_streak: &i32 = char_streaks.get(&'T').unwrap_or(&0);
+        println!("Most heads in a row: {}", heads_streak);
+        println!("Most tails in a row: {}", tails_streak);
 
         string_to_file(&flip_results.flip_sequence, "results.txt");
     }
